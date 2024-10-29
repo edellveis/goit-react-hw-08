@@ -5,14 +5,14 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ContactProfileShema } from "../../utils/schemas";
 
 export default function ContactForm({ handleSubmit }) {
-  const INITIA_VALUES = {
+  const INITIAL_VALUES = {
     name: "",
     number: "",
   };
 
   return (
     <Formik
-      initialValues={INITIA_VALUES}
+      initialValues={INITIAL_VALUES}
       onSubmit={handleSubmit}
       validationSchema={ContactProfileShema}
     >

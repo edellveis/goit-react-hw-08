@@ -1,49 +1,48 @@
-import React, { useEffect, useState } from "react";
+// src/App.jsx
+import React from "react";
 import ContactForm from "./components/ContactForm/ContactForm";
 import SearchBox from "./components/SearchBox/SearchBox";
 import ContactList from "./components/ContactList/ContactList";
 import { nanoid } from "nanoid";
-
 import style from "./App.module.css";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addContact,
+  deleteContact,
+  selectContacts,
+} from "./redux/contactSlice";
+import { changeFilter, selectNameFilter } from "./redux/filtersSlice";
+
 export default function App() {
-  const state = [
-    { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-    { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-    { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-    { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-  ];
+  const dispatch = useDispatch();
+  const dataContact = useSelector(selectContacts) || [];
+  const filter = useSelector(selectNameFilter);
 
-  const [dataContact, setDataContact] = useState(() => {
-    const localDataContact = localStorage.getItem("datacontact");
-    return localDataContact ? JSON.parse(localDataContact) : state;
-  });
-  useEffect(() => {
-    localStorage.setItem("datacontact", JSON.stringify(dataContact));
-  }, [dataContact]);
+  const handleSubmit = (values, action) => {
+    const newContact = { id: nanoid(), ...values };
+    dispatch(addContact(newContact));
+    action.resetForm();
+  };
 
-  const [filter, setFilter] = useState("");
+  const onDelete = (idcontact) => {
+    dispatch(deleteContact(idcontact));
+  };
+
+  const handleFilterChange = (e) => {
+    dispatch(changeFilter(e.toLowerCase()));
+  };
+
   const filterContact = dataContact.filter((contact) =>
     contact.name.toLowerCase().includes(filter)
   );
-  const handleSubmit = (values, action) => {
-    const newContact = { id: nanoid(), ...values };
-    setDataContact((prevstate) => [...prevstate, newContact]);
-    action.resetForm();
-  };
-  const onDelete = (idcontact) => {
-    setDataContact(dataContact.filter((item) => item.id !== idcontact));
-  };
+
   return (
     <div className={style.container}>
       <h1 className={style.title}>Phonebook</h1>
       <ContactForm handleSubmit={handleSubmit} />
-      <SearchBox filter={filter} setFilter={setFilter} />
-      <ContactList
-        dataContact={dataContact}
-        onDelete={onDelete}
-        filterContact={filterContact}
-      />
+      <SearchBox filter={filter} setFilter={handleFilterChange} />
+      <ContactList filterContact={filterContact} onDelete={onDelete} />
     </div>
   );
 }
