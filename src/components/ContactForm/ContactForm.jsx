@@ -1,15 +1,21 @@
-import React from "react";
 import style from "./ConctactForm.module.css";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ContactProfileShema } from "../../utils/schemas";
-
-export default function ContactForm({ handleSubmit }) {
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contactSlice";
+import { nanoid } from "nanoid";
+export default function ContactForm() {
   const INITIAL_VALUES = {
     name: "",
     number: "",
   };
-
+  const dispatch = useDispatch();
+  const handleSubmit = (values, actions) => {
+    const newContact = { id: nanoid(), ...values };
+    dispatch(addContact(newContact));
+    actions.resetForm();
+  };
   return (
     <Formik
       initialValues={INITIAL_VALUES}
