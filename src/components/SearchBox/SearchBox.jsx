@@ -1,6 +1,7 @@
 import style from "./SeatchBox.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { changeFilter, selectNameFilter } from "../../redux/filtersSlice";
+import { changeFilter } from "../../redux/filtersSlice";
+import { selectNameFilter } from "../../redux/useSelect";
 
 export default function SearchBox() {
   const filter = useSelector(selectNameFilter);
