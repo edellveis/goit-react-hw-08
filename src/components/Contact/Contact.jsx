@@ -1,4 +1,4 @@
-import { deleteContact } from "../../redux/contactsOps";
+import { deleteContact } from "../../redux/contacts/operations";
 import style from "./Contact.module.css";
 import { useDispatch } from "react-redux";
 
